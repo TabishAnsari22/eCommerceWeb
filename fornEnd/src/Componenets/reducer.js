@@ -10,6 +10,9 @@ export const reducer = (state, action) => {
         case "CHANGE_THEME": {
             return { ...state, darkTheme: !state.darkTheme }
         }
+        case "ADD_CARTS": {
+            return { ...state, addCarts: action.payload}
+        }
         default: {
             return state
         }
