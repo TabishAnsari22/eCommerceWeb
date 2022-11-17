@@ -68,10 +68,13 @@ const Navbar = () => {
             <Link to="/Profile">
               <button className="navBtn">Profile</button>
             </Link>
+            <Link to="/MyOrder">
+              <button className="navBtn">MyOrder</button>
+            </Link>
             <Link to="/Createproducts">
               <button className="navBtn">CreateProducts</button>
             </Link>
-            <Link to="/login" onClick={logouthandler}>
+            <Link to="/" onClick={logouthandler}>
               <button className="navBtn">Logout</button>
             </Link>
           </div>
@@ -83,6 +86,9 @@ const Navbar = () => {
               <Badge badgeContent={state?.addCarts?.length} color="primary">
                 <ShoppingCartIcon className="icon1" />
               </Badge>
+            </Link>
+            <Link to="/">
+              <button className="navBtn">Home</button>
             </Link>
             <Link to="/login">
               {" "}

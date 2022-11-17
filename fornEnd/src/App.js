@@ -19,6 +19,9 @@ import lodingimg from "./Componenets/images/loadingimg.gif";
 import Createproducts from "./Componenets/Createproducts";
 import UserPage from "./Componenets/UserPage";
 import AddToCart from "./Componenets/AddToCart";
+import CheckOut from "./Componenets/CheckOut";
+import CheckoutSuccess from "./Componenets/CheckOutSuccess";
+import MyOrder from "./Componenets/MyOrder";
 
 function App() {
   let { state, dispatch } = useContext(GlobalContext);
@@ -58,12 +61,15 @@ function App() {
         {state.isLogin === true ? (
           <>
             <Route path="/Profile" element={<Profile />} />
-            <Route path="/logout" element={<Logout />} />
+            <Route path="/logout" element={<UserPage />} />
             <Route path="/Createproducts" element={<Createproducts />} />
             <Route path="/product" element={<Products />} />
             <Route path="/login" element={<UserPage />} />
             <Route path="/" element={<UserPage />} />
             <Route path="/AddToCart" element={<AddToCart />} />
+            <Route path="/CheckOut" element={<CheckOut />} />
+            <Route path="/checkout-success" element={<CheckoutSuccess />} />
+            <Route path="/MyOrder" element={<MyOrder />} />
           </>
         ) : null}
 

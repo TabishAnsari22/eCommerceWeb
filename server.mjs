@@ -1,4 +1,5 @@
 import express, { request } from "express";
+import Stripe from "stripe";
 import cors from "cors";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
@@ -69,27 +70,34 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   gender: { type: String, required: true },
   address: { type: String, required: true },
-
-  // age: { type: Number, min: 18, max: 60, default: 18 },
-  // isMarried: { type: Boolean, default: false },
-
   createdOn: { type: Date, default: Date.now },
 });
 
 const userModel = mongoose.model("user", userSchema);
 
 const productSchema = new mongoose.Schema({
-  // name: { type: String, required: true },
   productPicture: { type: String, required: true },
   title: { type: String },
   price: { type: String, required: true },
   condition: { type: String, required: true },
   description: { type: String, required: true },
   createdBy: { type: String, required: true },
-  // code: { type: String, required: true },
   createdOn: { type: Date, default: Date.now },
+  count: { type: Number },
 });
 const productModel = mongoose.model("products", productSchema);
+
+/////////////////order Schema///////////////
+const Schema = mongoose.Schema;
+const OrderSchema = new Schema({
+  id: { type: String },
+  createdBy: { type: String },
+  cartItems: [productSchema],
+  amount: { type: String, required: true },
+  date_added: { type: Date, default: Date.now },
+});
+const OrderModel = mongoose.model("order", OrderSchema);
+//////////////////////////////////////////////
 
 app.post("/login", (req, res) => {
   let body = req.body;
@@ -242,6 +250,109 @@ app.post("/signup", (req, res) => {
   });
 });
 
+app.get("/products", async (req, res) => {
+  try {
+    const products = await productModel.find({}).exec();
+    console.log("all product: ", products);
+
+    res.send({
+      message: "all products",
+      data: products,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "faild to get product",
+    });
+  }
+});
+
+////////////////////////////////////////////////////
+
+const stripe = new Stripe(
+  "sk_test_51LyBFNAUV1ejpZwqgBjEO31PORjqSgJuOLoTzSyU2fenZNJFsXbydspbK6I0DcjPcnvaOj254SrOHAHd0sBx1FMq00XbuNwhVL"
+);
+app.post("/create-checkout-session", async (req, res) => {
+  const { id, amount, createdBy } = req.body;
+  console.log(amount, "amount=");
+
+  try {
+    const payment = await stripe.paymentIntents.create({
+      amount,
+      currency: "usd",
+      description: "success",
+      payment_method: id,
+      confirm: true,
+      metadata: {
+        createdBy,
+      },
+    });
+
+    const neworder = new OrderModel({
+      id: req.body.id,
+      cartItems: req.body.cartItems,
+      amount: req.body.amount,
+      createdBy: req.body.createdBy,
+      date_added: req.body.date_added,
+    });
+    neworder.save(function (err, result) {
+      console.log(err);
+      console.log(result);
+    });
+
+    return res.status(200).json({
+      confirm: "success",
+    });
+  } catch (error) {
+    console.log(error, "error=");
+    return res.status(400).json({
+      message: error?.message,
+    });
+  }
+});
+
+///////////////MyOrder////////////////////
+app.get("/MyOrder", async (req, res) => {
+  try {
+    const myOrder = await OrderModel.find({}).exec();
+    res.send({
+      message: "all Order",
+      data: myOrder,
+    });
+  } catch (error) {
+    res.status(500).send({ message: "error getting myOrder" });
+  }
+});
+
+//////////////////////////////////////
+
+
+app.put("/profile/:id", async (req, res) => {
+  console.log("profile to be edited: ", req.body);
+
+  const update = {};
+  if (req.body.firstName) update.firstName = req.body.firstName
+  if (req.body.lastName) update.lastName = req.body.lastName
+  if (req.body.gender) update.gender = req.body.gender
+  if (req.body.address) update.address = req.body.address
+
+  try {
+    const updated = await userModel.findOneAndUpdate({ _id: req.params.id }, update, { new: true })
+      .exec();
+    console.log("updated profile: ", updated);
+
+    res.send({
+      message: "profile updated successfuly",
+      data: updated,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "faild to upadate profile",
+    });
+  }
+});
+
+//////////////////////////////////////
+
 app.use(function (req, res, next) {
   console.log("req.cookies: ", req.cookies);
 
@@ -276,22 +387,6 @@ app.get("/profile", async (req, res) => {
     res.send(user);
   } catch (error) {
     res.status(500).send({ message: "error getting users" });
-  }
-});
-
-app.get("/products", async (req, res) => {
-  try {
-    const products = await productModel.find({}).exec();
-    console.log("all product: ", products);
-
-    res.send({
-      message: "all products",
-      data: products,
-    });
-  } catch (error) {
-    res.status(500).send({
-      message: "faild to get product",
-    });
   }
 });
 

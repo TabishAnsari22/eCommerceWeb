@@ -6,7 +6,6 @@ import * as yup from "yup";
 
 const Createproducts = () => {
   let { state, dispatch } = useContext(GlobalContext);
-  // let [toggleReload, setToggleReload] = useState(false);
   const [toggleRefresh, setToggleRefresh] = useState(true);
 
   const formik = useFormik({
@@ -81,17 +80,13 @@ const Createproducts = () => {
                 });
 
                 console.log(url);
-                // document.getElementById(
-                // "product_img"
-                // ).innerHTML = ` <img width="200px" src="${url}" alt="#" id="product_img" />`;
               }}
             />
           </div>
-          {/* <div id="product_img"></div> */}
+       
           {formik.touched.productPicture && formik.errors.productPicture ? (
             <div className="errorMessage">{formik.errors.productPicture}</div>
           ) : null}
-          {/* <br /> */}
 
           <div>
             <input

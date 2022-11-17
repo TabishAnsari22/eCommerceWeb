@@ -78,7 +78,8 @@ const UserPage = () => {
 
  
     const addToCart=(items)=>{
-
+      items.count=1
+      console.log(items,'items 123');
       if (!state.addCarts.some(a=> a._id == items._id)) {
         const cartItem = [...state?.addCarts,items]
         dispatch({
@@ -86,12 +87,15 @@ const UserPage = () => {
           payload: cartItem
         });
         localStorage.setItem("cartItem",JSON.stringify(cartItem))
-        console.log(items._id,"items");
+
+        // console.log(items._id,"items");
+        // cartItem.items.Count=1
+        // console.log(cartItem,'items nfn');
       } 
+      
     
   }
-  console.log(state.addCarts,"items length");
-
+ 
  
 
   return (

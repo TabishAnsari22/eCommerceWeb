@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@stripe/react-stripe-js": "^1.14.2",
+    "@stripe/stripe-js": "^1.42.1",
     "bcrypt-inzi": "^1.0.7",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -22,7 +24,9 @@
     "multer": "^1.4.5-lts.1",
     "nano": "^10.0.0",
     "nanoid": "^4.0.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "react-stripe-checkout": "^2.6.3",
+    "stripe": "^10.15.0"
   },
   "repository": {
     "type": "git",

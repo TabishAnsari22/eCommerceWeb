@@ -10,9 +10,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 let Product = () => {
   let { state, dispatch } = useContext(GlobalContext);
   let [products, setProducts] = useState([]);
+  let [toggleReload, setToggleReload] = useState(false);
   let [editProduct, setEditProduct] = useState(null);
   let [loading, setLoading] = useState(false);
-  let [toggleReload, setToggleReload] = useState(false);
 
   const [open, setOpen] = React.useState(false);
   const [fullWidth, setFullWidth] = React.useState(true);
